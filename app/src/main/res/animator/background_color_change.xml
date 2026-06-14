@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
+    android:propertyName="backgroundColor"
+    android:valueFrom="#FFFFFF99"
+    android:valueTo="#E8F4F8CC"
+    android:duration="300"
+    android:interpolator="@android:interpolator/accelerate_decelerate" />

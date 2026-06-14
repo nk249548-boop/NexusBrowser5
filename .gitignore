@@ -1,0 +1,55 @@
+# Gradle
+.gradle/
+build/
+*.apk
+*.aar
+*.ap_
+*.aab
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Log/OS Files
+*.log
+.DS_Store
+thumbs.db
+
+# Android Studio
+.idea/
+*.iml
+*.iws
+*.ipr
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Android Gradle
+.gradle
+local.properties
+
+# Misc
+.env
+.env.local
+*.jks
+*.keystore
+release/
+
+# Built application files
+*.dex
+*.class
+bin/
+gen/
+
+# IDE files
+out/
+.vs/
+.vscode/
+
+# Gradle files
+.gradle
+
+# NDK
+obj/
