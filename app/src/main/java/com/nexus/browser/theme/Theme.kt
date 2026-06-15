@@ -115,6 +115,3 @@ fun darkColorScheme() = darkColorScheme(
     onSurface = DarkColorPalette.textPrimary,
     outline = DarkColorPalette.divider
 )
-
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
