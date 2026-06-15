@@ -131,37 +131,6 @@ fun NexusBrowserUI(
                 onSearch = { /* TODO */ }
             )
         }
-            // Top Status Bar
-            TopStatusBar()
-
-            // Main Content Area
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-            ) {
-                when (selectedTab.value) {
-                    0 -> HomeScreen()
-                    1 -> FilesScreen()
-                    2 -> TabsScreen(tabCount.value)
-                    3 -> ProfileScreen()
-                }
-            }
-
-            // Bottom Navigation
-            BottomNavigationBar(
-                selectedTab = selectedTab.value,
-                onTabSelected = { selectedTab.value = it },
-                tabCount = tabCount.value
-            )
-        }
-
-        // Floating Action Buttons
-        FloatingActionButtonBar(
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(16.dp)
-        )
     }
 }
 
