@@ -64,6 +64,7 @@ fun NexusBrowserUI(
 ) {
     val tabs by viewModel.tabs.collectAsState()
     val activeTabId by viewModel.activeTabId.collectAsState()
+    val selectedTab by viewModel.selectedBottomTab.collectAsState()
     
     NexusTheme(darkTheme = isDarkMode) {
         Box(
@@ -72,6 +73,64 @@ fun NexusBrowserUI(
                 .background(NexusColors.backgroundGradient)
         ) {
             Column(modifier = Modifier.fillMaxSize()) {
+                // Main Content Area
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxSize()
+                ) {
+                    when (selectedTab) {
+                        0 -> HomeScreen(viewModel)
+                        1 -> FilesScreen(viewModel)
+                        2 -> TabsScreen(viewModel)
+                        3 -> ProfileScreen(viewModel)
+                    }
+                }
+
+                // Bottom Navigation
+                GlassBottomNav {
+                    BottomNavItem(
+                        icon = Icons.Default.Home,
+                        label = "Home",
+                        isSelected = selectedTab == 0,
+                        onClick = { viewModel.selectBottomTab(0) }
+                    )
+                    
+                    BottomNavItem(
+                        icon = Icons.Default.Folder,
+                        label = "Files",
+                        isSelected = selectedTab == 1,
+                        onClick = { viewModel.selectBottomTab(1) }
+                    )
+                    
+                    BottomNavItem(
+                        icon = Icons.Default.Tab,
+                        label = "Tabs",
+                        isSelected = selectedTab == 2,
+                        onClick = { viewModel.selectBottomTab(2) },
+                        badgeCount = tabs.size
+                    )
+                    
+                    BottomNavItem(
+                        icon = Icons.Default.Person,
+                        label = "Me",
+                        isSelected = selectedTab == 3,
+                        onClick = { viewModel.selectBottomTab(3) }
+                    )
+                }
+            }
+
+            // Floating Search Bar
+            NexusSearchBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .align(Alignment.TopCenter),
+                query = "",
+                onQueryChange = { /* TODO */ },
+                onSearch = { /* TODO */ }
+            )
+        }
             // Top Status Bar
             TopStatusBar()
 
