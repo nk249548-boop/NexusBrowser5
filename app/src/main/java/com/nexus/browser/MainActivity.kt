@@ -56,25 +56,17 @@ fun NexusBrowserApp() {
 }
 
 @Composable
-fun NexusBrowserUI(isDarkMode: Boolean) {
+fun NexusBrowserUI() {
     val selectedTab = remember { mutableStateOf(0) }
-    val showSettings = remember { mutableStateOf(false) }
-    val showTabs = remember { mutableStateOf(false) }
-    val urlText = remember { mutableStateOf("") }
-    val tabCount = remember { mutableStateOf(3) }
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFFF0F4FF),
-                        Color(0xFFFFE6F0)
-                    )
-                )
-            )
-    ) {
+    val showBottomSheet = remember { mutableStateOf(false) }
+    
+    // Wrap in our theme
+    NexusTheme {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(NexusColors.backgroundGradient)
+        ) {
         Column(modifier = Modifier.fillMaxSize()) {
             // Top Status Bar
             TopStatusBar()

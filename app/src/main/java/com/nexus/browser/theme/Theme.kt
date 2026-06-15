@@ -5,42 +5,83 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
-// Light Theme Colors
-object LightColorPalette {
-    val primary = Color(0xFF5B7FFF)
-    val primaryVariant = Color(0xFF4A68E8)
-    val secondary = Color(0xFF03DAC6)
-    val background = Color(0xFFFAFAFA)
-    val surface = Color.White
-    val error = Color(0xFFB00020)
-    val textPrimary = Color(0xFF2D3748)
-    val textSecondary = Color(0xFF718096)
-    val divider = Color(0xFFE2E8F0)
+// Nexus Browser Color Tokens
+object NexusColors {
+    // Primary colors
+    val primary = Color(0xFF1A73E8)
+    val primaryVariant = Color(0xFF0D47A1)
+    val secondary = Color(0xFFFF9800)
     
-    // Gradient Colors
-    val gradientStart = Color(0xFFF0F4FF)
-    val gradientEnd = Color(0xFFFFE6F0)
+    // Surface/elevation
+    val surface = Color.White
+    val surfaceVariant = Color.White.copy(alpha = 0.7f)
+    val surfaceDark = Color(0xFF1E1E1E)
+    
+    // Text & icons
+    val textPrimary = Color(0xFF202124)
+    val textSecondary = Color(0xFF5F6368)
+    val textTertiary = Color(0xFF9AA0A6)
+    
+    // Background gradients
+    private val gradientBlue = Color(0xFFE3F2FD)
+    private val gradientPink = Color(0xFFFCE4EC)
+    private val gradientWhite = Color(0xFFFFFFFF)
+    
+    val backgroundGradient = Brush.linearGradient(
+        colors = listOf(gradientBlue, gradientPink, gradientWhite),
+        start = Offset(0f, 0f),
+        end = Offset(1000f, 1000f)
+    )
+    
+    // Glassmorphism effects
+    fun glassSurface(alpha: Float = 0.7f) = Color.White.copy(alpha = alpha)
+    val glassBorder = Color.White.copy(alpha = 0.8f)
 }
 
-// Dark Theme Colors
-object DarkColorPalette {
-    val primary = Color(0xFF7B9FFF)
-    val primaryVariant = Color(0xFF5B7FFF)
-    val secondary = Color(0xFF03DAC6)
-    val background = Color(0xFF1a1a1a)
-    val surface = Color(0xFF2D3748)
-    val error = Color(0xFFCF6679)
-    val textPrimary = Color(0xFFF7FAFC)
-    val textSecondary = Color(0xFFCBD5E0)
-    val divider = Color(0xFF4A5568)
+// Corner radius constants (matches spec)
+object Corners {
+    val small = 8.dp
+    val medium = 16.dp
+    val large = 24.dp
+    val xlarge = 32.dp
     
-    // Gradient Colors
-    val gradientStart = Color(0xFF1F2937)
-    val gradientEnd = Color(0xFF2D3748)
+    // Special cases
+    val searchBar = 24.dp
+    val bottomNav = 24.dp
+    val bottomSheet = 32.dp
 }
 
 @Composable
-fun lightColorScheme() = lightColorScheme(
+fun NexusTheme(
+    darkTheme: Boolean = false,
+    content: @Composable () -> Unit
+) {
+    val colorScheme = if (darkTheme) {
+        // TODO: Implement dark theme
+        darkColorScheme()
+    } else {
+        lightColorScheme(
+            primary = NexusColors.primary,
+            onPrimary = Color.White,
+            primaryContainer = NexusColors.primaryVariant,
+            secondary = NexusColors.secondary,
+            onSecondary = Color.Black,
+            background = Color.Transparent,
+            surface = NexusColors.surface,
+            onSurface = NexusColors.textPrimary,
+            surfaceVariant = NexusColors.surfaceVariant
+        )
+    }
+    
+    MaterialTheme(
+        colorScheme = colorScheme,
+        typography = Typography,
+        content = content
+    )
+}
+
+@Composable
+private fun lightColorScheme() = lightColorScheme(
     primary = LightColorPalette.primary,
     onPrimary = Color.White,
     primaryContainer = Color(0xFFEEF0FF),

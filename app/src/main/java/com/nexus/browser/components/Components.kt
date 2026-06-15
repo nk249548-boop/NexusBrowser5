@@ -20,21 +20,121 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 
-// Card Component with gradient background
+// Glassmorphic Card Component
 @Composable
-fun GradientCard(
+fun GlassCard(
     modifier: Modifier = Modifier,
-    gradient: Brush = Brush.verticalGradient(
-        colors = listOf(Color(0xFFF0F4FF), Color(0xFFFFE6F0))
-    ),
+    cornerRadius: Dp = Corners.medium,
+    alpha: Float = 0.7f,
+    blurRadius: Dp = 8.dp,
     content: @Composable BoxScope.() -> Unit
 ) {
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(16.dp))
-            .background(gradient),
+            .clip(RoundedCornerShape(cornerRadius))
+            .background(NexusColors.glassSurface(alpha))
+            .border(
+                width = 1.dp,
+                color = NexusColors.glassBorder,
+                shape = RoundedCornerShape(cornerRadius)
+            ),
         content = content
     )
+}
+
+// Glassmorphic Bottom Navigation
+@Composable
+fun GlassBottomNav(
+    modifier: Modifier = Modifier,
+    content: @Composable RowScope.() -> Unit
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(80.dp)
+            .clip(RoundedCornerShape(topStart = Corners.bottomNav, topEnd = Corners.bottomNav))
+            .background(NexusColors.glassSurface())
+            .border(
+                width = 1.dp,
+                color = NexusColors.glassBorder,
+                shape = RoundedCornerShape(topStart = Corners.bottomNav, topEnd = Corners.bottomNav)
+            )
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+        horizontalArrangement = Arrangement.SpaceAround,
+        verticalAlignment = Alignment.CenterVertically,
+        content = content
+    )
+}
+
+// Pill-shaped Search Bar
+@Composable
+fun NexusSearchBar(
+    modifier: Modifier = Modifier,
+    query: String = "",
+    onQueryChange: (String) -> Unit,
+    onSearch: () -> Unit
+) {
+    GlassCard(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(56.dp),
+        cornerRadius = Corners.searchBar
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            // Google logo
+            Box(
+                modifier = Modifier
+                    .size(24.dp)
+                    .background(NexusColors.primary, CircleShape)
+                    .padding(4.dp)
+            ) {
+                Text(
+                    "G",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
+            // Search field
+            BasicTextField(
+                value = query,
+                onValueChange = onQueryChange,
+                modifier = Modifier.weight(1f),
+                textStyle = TextStyle(
+                    color = NexusColors.textPrimary
+                ),
+                decorationBox = { innerTextField ->
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.CenterStart
+                    ) {
+                        if (query.isEmpty()) {
+                            Text(
+                                "Search or type web address",
+                                color = NexusColors.textTertiary
+                            )
+                        }
+                        innerTextField()
+                    }
+                }
+            )
+
+            // Voice search icon
+            IconButton(onClick = { /* TODO */ }) {
+                Icon(
+                    Icons.Default.Mic,
+                    contentDescription = "Voice search",
+                    tint = NexusColors.primary
+                )
+            }
+        }
+    }
 }
 
 // Icon Button with ripple effect
