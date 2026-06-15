@@ -462,221 +462,571 @@ fun FeatureGridItem(name: String, icon: androidx.compose.ui.graphics.vector.Imag
 }
 
 @Composable
-fun FilesScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        Text(
-            "Files",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF2D3748),
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
+fun DownloadsScreen(viewModel: BrowserViewModel) {
+    val downloads by viewModel.downloads.collectAsState()
+    val currentFilter = remember { mutableStateOf("all") }
+    
+    NexusTheme {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(NexusColors.backgroundGradient)
+                .padding(16.dp)
+        ) {
+            // Header
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(
+                    onClick = { /* Handle back */ },
+                    modifier = Modifier.size(40.dp)
+                ) {
+                    Icon(
+                        Icons.Default.ArrowBack,
+                        "Back",
+                        tint = NexusColors.primary
+                    )
+                }
+                
+                Text(
+                    "Downloads",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = NexusColors.textPrimary
+                )
+                
+                Row {
+                    IconButton(
+                        onClick = { /* Search */ },
+                        modifier = Modifier.size(40.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.Search,
+                            "Search",
+                            tint = NexusColors.primary
+                        )
+                    }
+                    IconButton(
+                        onClick = { /* Menu */ },
+                        modifier = Modifier.size(40.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.MoreVert,
+                            "Menu",
+                            tint = NexusColors.primary
+                        )
+                    }
+                }
+            }
 
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            items(5) { index ->
-                FileItem("Document_${index + 1}.pdf", "${2.5 + index} MB")
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Filter chips
+            val filters = listOf("All", "Images", "Videos", "Docs", "Audio")
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                filters.forEach { filter ->
+                    val isSelected = currentFilter.value.equals(filter, ignoreCase = true)
+                    FilterChip(
+                        selected = isSelected,
+                        onClick = { currentFilter.value = filter.lowercase() },
+                        modifier = Modifier
+                            .padding(vertical = 4.dp)
+                    ) {
+                        Text(
+                            filter,
+                            color = if (isSelected) NexusColors.primary else NexusColors.textSecondary
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Downloads list
+            if (downloads.isEmpty()) {
+                EmptyStateScreen(
+                    icon = Icons.Default.Download,
+                    title = "No Downloads",
+                    subtitle = "Files you download will appear here"
+                )
+            } else {
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(downloads) { download ->
+                        DownloadItem(
+                            download = download,
+                            onItemClick = { /* Open file */ },
+                            onMenuClick = { /* Show menu */ }
+                        )
+                    }
+                }
             }
         }
     }
 }
 
 @Composable
-fun FileItem(fileName: String, fileSize: String) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
-            .background(Color(0xFFF7FAFC))
-            .border(1.dp, Color(0xFFE2E8F0), RoundedCornerShape(8.dp))
-            .clickable { }
-            .padding(12.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+fun DownloadItem(
+    download: Download,
+    onItemClick: () -> Unit,
+    onMenuClick: () -> Unit
+) {
+    GlassCard(
+        modifier = Modifier.fillMaxWidth()
     ) {
         Row(
-            modifier = Modifier.weight(1f),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                Icons.Default.Description,
-                "File",
-                modifier = Modifier.size(24.dp),
-                tint = Color(0xFF5B7FFF)
-            )
-
-            Column {
-                Text(
-                    fileName,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color(0xFF2D3748)
-                )
-
-                Text(
-                    fileSize,
-                    fontSize = 12.sp,
-                    color = Color(0xFF718096)
-                )
-            }
-        }
-
-        Icon(
-            Icons.Default.MoreVert,
-            "More",
-            modifier = Modifier
-                .size(20.dp)
-                .clickable { },
-            tint = Color(0xFF718096)
-        )
-    }
-}
-
-@Composable
-fun ProfileScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        Text(
-            "Me",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF2D3748),
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-
-        // Profile Card
-        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(12.dp))
-                .background(
-                    brush = Brush.linearGradient(
-                        colors = listOf(
-                            Color(0xFF5B7FFF),
-                            Color(0xFF7B9FFF)
-                        )
-                    )
-                )
+                .clickable { onItemClick() }
                 .padding(16.dp),
-            contentAlignment = Alignment.Center
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+            // File type icon
+            Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .background(
+                        color = NexusColors.primary.copy(alpha = 0.1f),
+                        shape = CircleShape
+                    ),
+                contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    Icons.Default.AccountCircle,
-                    "Profile",
-                    modifier = Modifier.size(64.dp),
-                    tint = Color.White
+                    Icons.Default.Download,
+                    "Download",
+                    tint = NexusColors.primary,
+                    modifier = Modifier.size(24.dp)
                 )
+            }
 
+            // File info
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
                 Text(
-                    "Nexus Browser User",
-                    fontSize = 18.sp,
+                    download.fileName,
+                    color = NexusColors.textPrimary,
+                    fontWeight = FontWeight.SemiBold,
+                    maxLines = 1
+                )
+                Text(
+                    viewModel.formatFileSize(download.fileSize),
+                    color = NexusColors.textSecondary,
+                    fontSize = 12.sp
+                )
+                
+                if (download.progress < 1f) {
+                    Spacer(modifier = Modifier.height(4.dp))
+                    LinearProgressIndicator(
+                        progress = download.progress,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(4.dp),
+                        color = NexusColors.primary,
+                        trackColor = NexusColors.textTertiary.copy(alpha = 0.2f)
+                    )
+                }
+            }
+
+            // Menu button
+            IconButton(
+                onClick = onMenuClick,
+                modifier = Modifier.size(40.dp)
+            ) {
+                Icon(
+                    Icons.Default.MoreVert,
+                    "Menu",
+                    tint = NexusColors.textSecondary
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun SettingsScreen(viewModel: BrowserViewModel) {
+    val settings by viewModel.settings.collectAsState()
+    
+    NexusTheme {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(NexusColors.backgroundGradient)
+                .padding(16.dp)
+        ) {
+            // Header
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(
+                    onClick = { /* Handle back */ },
+                    modifier = Modifier.size(40.dp)
+                ) {
+                    Icon(
+                        Icons.Default.ArrowBack,
+                        "Back",
+                        tint = NexusColors.primary
+                    )
+                }
+                
+                Text(
+                    "Settings",
+                    fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White
+                    color = NexusColors.textPrimary
                 )
+                
+                Spacer(modifier = Modifier.size(40.dp)) // For balance
+            }
 
-                Text(
-                    "user@nexusbrowser.com",
-                    fontSize = 12.sp,
-                    color = Color(0xFFE0E0E0)
-                )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Settings sections
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                item {
+                    Text(
+                        "General",
+                        color = NexusColors.textPrimary,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 18.sp
+                    )
+                }
+                
+                item {
+                    GlassCard {
+                        Column {
+                            SettingItem(
+                                icon = Icons.Default.Search,
+                                title = "Search Engine",
+                                value = settings.searchEngine,
+                                onClick = { /* Show engine selection */ }
+                            )
+                            SettingItem(
+                                icon = Icons.Default.Home,
+                                title = "Homepage",
+                                value = settings.homepage,
+                                onClick = { /* Edit homepage */ }
+                            )
+                            SettingItem(
+                                icon = Icons.Default.DarkMode,
+                                title = "Dark Mode",
+                                trailing = {
+                                    Switch(
+                                        checked = settings.isDarkMode,
+                                        onCheckedChange = { viewModel.toggleDarkMode() },
+                                        colors = SwitchDefaults.colors(
+                                            checkedThumbColor = NexusColors.primary,
+                                            checkedTrackColor = NexusColors.primary.copy(alpha = 0.3f)
+                                        )
+                                    )
+                                }
+                            )
+                        }
+                    }
+                }
+
+                item {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        "Privacy & Security",
+                        color = NexusColors.textPrimary,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 18.sp
+                    )
+                }
+                
+                item {
+                    GlassCard {
+                        Column {
+                            SettingItem(
+                                icon = Icons.Default.Block,
+                                title = "Ad Block",
+                                trailing = {
+                                    Switch(
+                                        checked = settings.adBlockEnabled,
+                                        onCheckedChange = { viewModel.toggleAdBlock() },
+                                        colors = SwitchDefaults.colors(
+                                            checkedThumbColor = NexusColors.primary,
+                                            checkedTrackColor = NexusColors.primary.copy(alpha = 0.3f)
+                                        )
+                                    )
+                                }
+                            )
+                            SettingItem(
+                                icon = Icons.Default.PrivateConnectivity,
+                                title = "Incognito Mode",
+                                trailing = {
+                                    Switch(
+                                        checked = settings.incognitoEnabled,
+                                        onCheckedChange = { viewModel.toggleNightMode() },
+                                        colors = SwitchDefaults.colors(
+                                            checkedThumbColor = NexusColors.primary,
+                                            checkedTrackColor = NexusColors.primary.copy(alpha = 0.3f)
+                                        )
+                                    )
+                                }
+                            )
+                            SettingItem(
+                                icon = Icons.Default.DataUsage,
+                                title = "Data Storage",
+                                trailing = {
+                                    Switch(
+                                        checked = settings.dataStorageEnabled,
+                                        onCheckedChange = { /* Toggle */ },
+                                        colors = SwitchDefaults.colors(
+                                            checkedThumbColor = NexusColors.primary,
+                                            checkedTrackColor = NexusColors.primary.copy(alpha = 0.3f)
+                                        )
+                                    )
+                                }
+                            )
+                        }
+                    }
+                }
+
+                item {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        "Advanced",
+                        color = NexusColors.textPrimary,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 18.sp
+                    )
+                }
+                
+                item {
+                    GlassCard {
+                        Column {
+                            SettingItem(
+                                icon = Icons.Default.Translate,
+                                title = "Default Language",
+                                value = "English",
+                                onClick = { /* Show languages */ }
+                            )
+                            SettingItem(
+                                icon = Icons.Default.DesktopMac,
+                                title = "Desktop Mode",
+                                trailing = {
+                                    Switch(
+                                        checked = false,
+                                        onCheckedChange = { /* Toggle */ },
+                                        colors = SwitchDefaults.colors(
+                                            checkedThumbColor = NexusColors.primary,
+                                            checkedTrackColor = NexusColors.primary.copy(alpha = 0.3f)
+                                        )
+                                    )
+                                }
+                            )
+                            SettingItem(
+                                icon = Icons.Default.Settings,
+                                title = "Advanced Settings",
+                                onClick = { /* Show advanced */ }
+                            )
+                        }
+                    }
+                }
             }
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            "Account Settings",
-            fontSize = 14.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = Color(0xFF2D3748)
-        )
-
-        SettingItem("Privacy", "High", Icons.Default.Lock)
-        SettingItem("Notifications", "Enabled", Icons.Default.Notifications)
-        SettingItem("Backup", "Auto", Icons.Default.CloudUpload)
-        SettingItem("About", "Info", Icons.Default.Info)
     }
 }
 
 @Composable
-fun TabsScreen(tabCount: Int) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        Text(
-            "Tabs ($tabCount)",
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF2D3748)
-        )
-
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            items(tabCount) { index ->
-                TabItem(index + 1)
-            }
-        }
-    }
-}
-
-@Composable
-fun TabItem(tabNumber: Int) {
+fun SettingItem(
+    icon: ImageVector,
+    title: String,
+    value: String? = null,
+    trailing: @Composable (() -> Unit)? = null,
+    onClick: () -> Unit = {}
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
-            .background(Color(0xFFF7FAFC))
-            .border(1.dp, Color(0xFFE2E8F0), RoundedCornerShape(8.dp))
-            .clickable { }
-            .padding(12.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+            .clickable { onClick() }
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Column(
-            modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Text(
-                "Tab $tabNumber",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = Color(0xFF2D3748)
+            Icon(
+                icon,
+                title,
+                tint = NexusColors.primary,
+                modifier = Modifier.size(24.dp)
             )
-
-            Text(
-                "https://example.com/page$tabNumber",
-                fontSize = 12.sp,
-                color = Color(0xFF718096),
-                maxLines = 1
-            )
+            
+            Column {
+                Text(
+                    title,
+                    color = NexusColors.textPrimary,
+                    fontWeight = FontWeight.Medium
+                )
+                if (value != null) {
+                    Text(
+                        value,
+                        color = NexusColors.textSecondary,
+                        fontSize = 12.sp
+                    )
+                }
+            }
         }
-
-        Icon(
-            Icons.Default.Close,
-            "Close Tab",
-            modifier = Modifier
-                .size(20.dp)
-                .clickable { },
-            tint = Color(0xFF718096)
+        
+        trailing?.invoke() ?: Icon(
+            Icons.Default.ChevronRight,
+            "More",
+            tint = NexusColors.textTertiary,
+            modifier = Modifier.size(24.dp)
         )
+    }
+}
+
+@Composable
+fun TabsScreen(viewModel: BrowserViewModel) {
+    val tabs by viewModel.tabs.collectAsState()
+    val activeTabId by viewModel.activeTabId.collectAsState()
+    
+    NexusTheme {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(NexusColors.backgroundGradient)
+                .padding(16.dp)
+        ) {
+            // Header with Add and Menu buttons
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    "Tabs (${tabs.size})",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = NexusColors.textPrimary
+                )
+                
+                Row {
+                    IconButton(
+                        onClick = { viewModel.addNewTab() },
+                        modifier = Modifier.size(40.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.Add,
+                            "Add Tab",
+                            tint = NexusColors.primary
+                        )
+                    }
+                    IconButton(
+                        onClick = { /* TODO: Show tabs menu */ },
+                        modifier = Modifier.size(40.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.MoreVert,
+                            "Menu",
+                            tint = NexusColors.primary
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Tab cards in a staggered grid
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                items(tabs) { tab ->
+                    GlassCard(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(180.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .clickable { viewModel.switchTab(tab.id) }
+                        ) {
+                            // Tab preview placeholder
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(Color.LightGray.copy(alpha = 0.2f))
+                            )
+                            
+                            // Tab info overlay
+                            Column(
+                                modifier = Modifier
+                                    .align(Alignment.BottomStart)
+                                    .fillMaxWidth()
+                                    .background(NexusColors.glassSurface(0.8f))
+                                    .padding(12.dp)
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    // Favicon placeholder
+                                    Box(
+                                        modifier = Modifier
+                                            .size(24.dp)
+                                            .background(Color.White, CircleShape)
+                                            .padding(4.dp)
+                                    ) {
+                                        Text(
+                                            tab.favicon ?: "🌐",
+                                            modifier = Modifier.align(Alignment.Center)
+                                        )
+                                    }
+                                    
+                                    Column(
+                                        modifier = Modifier.weight(1f)
+                                    ) {
+                                        Text(
+                                            tab.title,
+                                            color = NexusColors.textPrimary,
+                                            fontWeight = FontWeight.SemiBold,
+                                            maxLines = 1
+                                        )
+                                        Text(
+                                            tab.url,
+                                            color = NexusColors.textSecondary,
+                                            fontSize = 12.sp,
+                                            maxLines = 1
+                                        )
+                                    }
+                                    
+                                    IconButton(
+                                        onClick = { viewModel.closeTab(tab.id) },
+                                        modifier = Modifier.size(24.dp)
+                                    ) {
+                                        Icon(
+                                            Icons.Default.Close,
+                                            "Close",
+                                            tint = NexusColors.textSecondary
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
