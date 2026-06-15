@@ -1,8 +1,10 @@
 package com.nexus.browser
 
-import android.content.Context
-import android.webkit.WebChromeClient
-import android.webkit.WebViewClient
+import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.nexus.browser.theme.NexusColors
+import com.nexus.browser.theme.NexusTheme
+import com.nexus.browser.viewmodel.BrowserViewModel
 import androidx.compose.animation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -69,35 +71,7 @@ fun NexusBrowserUI(
                 .fillMaxSize()
                 .background(NexusColors.backgroundGradient)
         ) {
-            // Main content area
             Column(modifier = Modifier.fillMaxSize()) {
-                // Browser content will go here
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("Browser Content Area")
-                }
-
-                // Bottom navigation
-                GlassBottomNav {
-                    // Navigation items will be implemented here
-                }
-            }
-
-            // Floating search bar
-            NexusSearchBar(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                query = "",
-                onQueryChange = { /* TODO */ },
-                onSearch = { /* TODO */ }
-            )
-        }
-        Column(modifier = Modifier.fillMaxSize()) {
             // Top Status Bar
             TopStatusBar()
 

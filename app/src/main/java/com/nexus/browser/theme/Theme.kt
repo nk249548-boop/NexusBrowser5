@@ -114,31 +114,5 @@ fun darkColorScheme() = darkColorScheme(
     outline = DarkColorPalette.divider
 )
 
-// Spacing Constants
-object Spacing {
-    val xs = 4.dp
-    val sm = 8.dp
-    val md = 12.dp
-    val lg = 16.dp
-    val xl = 24.dp
-    val xxl = 32.dp
-}
-
-// Corner Radius Constants
-object Corners {
-    val xs = 4.dp
-    val sm = 8.dp
-    val md = 12.dp
-    val lg = 16.dp
-    val xl = 24.dp
-}
-
-// Elevation Constants
-object Elevations {
-    val none = 0.dp
-    val xs = 1.dp
-    val sm = 2.dp
-    val md = 4.dp
-    val lg = 8.dp
-    val xl = 16.dp
-}
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
