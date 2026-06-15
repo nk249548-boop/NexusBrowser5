@@ -56,17 +56,47 @@ fun NexusBrowserApp() {
 }
 
 @Composable
-fun NexusBrowserUI() {
-    val selectedTab = remember { mutableStateOf(0) }
-    val showBottomSheet = remember { mutableStateOf(false) }
+fun NexusBrowserUI(
+    viewModel: BrowserViewModel = viewModel(),
+    isDarkMode: Boolean = false
+) {
+    val tabs by viewModel.tabs.collectAsState()
+    val activeTabId by viewModel.activeTabId.collectAsState()
     
-    // Wrap in our theme
-    NexusTheme {
+    NexusTheme(darkTheme = isDarkMode) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(NexusColors.backgroundGradient)
         ) {
+            // Main content area
+            Column(modifier = Modifier.fillMaxSize()) {
+                // Browser content will go here
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("Browser Content Area")
+                }
+
+                // Bottom navigation
+                GlassBottomNav {
+                    // Navigation items will be implemented here
+                }
+            }
+
+            // Floating search bar
+            NexusSearchBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                query = "",
+                onQueryChange = { /* TODO */ },
+                onSearch = { /* TODO */ }
+            )
+        }
         Column(modifier = Modifier.fillMaxSize()) {
             // Top Status Bar
             TopStatusBar()
