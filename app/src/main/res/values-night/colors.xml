@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary Colors -->
+    <color name="colorPrimary">#4A90D9</color>
+    <color name="colorPrimaryDark">#2D5AA3</color>
+    <color name="colorAccent">#66B2FF</color>
+
+    <!-- Premium Glassmorphism Colors (Dark) -->
+    <color name="glassLight">#2D2D3DCC</color>
+    <color name="glassMedium">#3D3D4D99</color>
+    <color name="glassDark">#2D2D3DDD</color>
+
+    <!-- Dark Theme Colors -->
+    <color name="backgroundColor">#121212</color>
+    <color name="toolbarBackground">#1E1E1E</color>
+    <color name="urlBarBackground">#2D2D2D</color>
+    <color name="urlBarStroke">#444444</color>
+    
+    <!-- Text Colors (Dark) -->
+    <color name="textPrimary">#FFFFFF</color>
+    <color name="textSecondary">#B0B0B0</color>
+    <color name="textTertiary">#808080</color>
+    <color name="iconTint">#CCCCCC</color>
+    <color name="hintColor">#999999</color>
+    <color name="dividerColor">#333333</color>
+    <color name="progressBackground">#333333</color>
+
+    <!-- Gradient Colors (Dark variants) -->
+    <color name="gradientBase">#1A1A2E</color>
+    <color name="gradientBlobBlue">#3D5A7A</color>
+    <color name="gradientBlobOrange">#5A3D2D</color>
+    <color name="gradientBlobRed">#5A2D3D</color>
+    <color name="gradientStart">#1A1A2E</color>
+    <color name="gradientMid1">#1E2A3D</color>
+    <color name="gradientMid2">#2A1E3D</color>
+    <color name="gradientMid3">#2A1A1E</color>
+    <color name="gradientEnd">#1A1A1A</color>
+
+    <!-- Quick Links Colors (unchanged, work well on dark) -->
+    <color name="googleBlue">#4285F4</color>
+    <color name="youtubeRed">#FF0000</color>
+    <color name="facebookBlue">#1877F2</color>
+    <color name="whatsappGreen">#25D366</color>
+    <color name="moreGray">#666666</color>
+
+    <!-- Shadow Colors (inverted for dark) -->
+    <color name="shadowLight">#2D000000</color>
+    <color name="shadowMedium">#3D000000</color>
+    <color name="shadowDark">#4D000000</color>
+
+    <!-- Special -->
+    <color name="incognitoColor">#1A1A1A</color>
+    <color name="errorColor">#FF4D4D</color>
+    <color name="successColor">#4DFF4D</color>
+
+    <!-- Status bar -->
+    <color name="statusBarColor">#121212</color>
+
+    <!-- Dark Mode Colors -->
+    <color name="darkBackground">#121212</color>
+    <color name="darkSurface">#1E1E1E</color>
+    <color name="darkTextPrimary">#FFFFFF</color>
+    <color name="darkTextSecondary">#B0B0B0</color>
+</resources>

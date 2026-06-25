@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <external-path
+        name="external_downloads"
+        path="Download/NexusBrowser/" />
+    <external-files-path
+        name="app_downloads"
+        path="Downloads/" />
+    <!-- ✅ FIX: DownloadHelper saves to getExternalFilesDir(null)/downloads (lowercase) -->
+    <external-files-path
+        name="app_downloads_lower"
+        path="downloads/" />
+    <!-- Root of external files dir for folder opening -->
+    <external-files-path
+        name="app_external_root"
+        path="." />
+    <cache-path
+        name="shared_images"
+        path="images/" />
+    <!-- Temp chunk files during multi-threaded download -->
+    <cache-path
+        name="cache_root"
+        path="." />
+</paths>

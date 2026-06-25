@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Network -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Storage (legacy APIs) -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
+    <!-- Notifications (Android 13+) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
+
+    <!-- Mic (voice search) -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <!--
+        FOREGROUND_SERVICE: required to keep NexusMediaSessionService alive
+        while media is playing in the background (Android 9+).
+
+        FOREGROUND_SERVICE_MEDIA_PLAYBACK: required on Android 14+ for services
+        that declare foregroundServiceType="mediaPlayback".
+    -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.NexusBrowser"
+        android:usesCleartextTraffic="true"
+        android:enableOnBackInvokedCallback="true">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
+            android:windowSoftInputMode="adjustResize"
+            android:supportsPictureInPicture="true"
+            android:resizeableActivity="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".SearchActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".DownloadsActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!--
+            PlayerActivity — Internal media player (ExoPlayer/Media3).
+            Connects to NexusMediaSessionService via MediaController.
+
+            configChanges: handles orientation in-process (no restart on rotation).
+            supportsPictureInPicture: allows PiP when user presses Home.
+            resizeableActivity: required alongside supportsPictureInPicture.
+            launchMode="singleTask": prevents stacking multiple player instances.
+        -->
+        <activity
+            android:name=".PlayerActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
+            android:supportsPictureInPicture="true"
+            android:resizeableActivity="true"
+            android:launchMode="singleTask" />
+
+        <!--
+            NexusMediaSessionService — background media playback service.
+
+            foregroundServiceType="mediaPlayback": required on Android 10+ to
+            allow starting a foreground service from the background, and on
+            Android 14+ alongside the FOREGROUND_SERVICE_MEDIA_PLAYBACK permission.
+
+            The ACTION_MEDIA_SESSION intent-filter allows Android Auto, Bluetooth
+            devices, WearOS, and the system media panel to discover this session.
+
+            exported="true" is required for the MediaSession intent-filter to be
+            reachable by the system media infrastructure.
+        -->
+        <service
+            android:name=".NexusMediaSessionService"
+            android:exported="true"
+            android:foregroundServiceType="mediaPlayback">
+            <intent-filter>
+                <action android:name="androidx.media3.session.MediaSessionService" />
+            </intent-filter>
+        </service>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+    </application>
+
+</manifest>
