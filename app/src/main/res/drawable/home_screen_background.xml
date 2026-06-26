@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    EXACT PHOTO MATCH GRADIENT - 100% COPY
+    Massive vibrant blobs: blue top, yellow-orange left-bottom, pink-red right-bottom
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Base: Soft pale cyan-mint -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#C8E6E0" />
+        </shape>
+    </item>
+
+    <!-- MASSIVE BLUE BLOB - Top-Center (like in photo) -->
+    <item
+        android:left="30dp"
+        android:top="-200dp"
+        android:right="30dp"
+        android:bottom="80dp">
+        <shape android:shape="oval">
+            <solid android:color="#60A8D8F0" />
+        </shape>
+    </item>
+
+    <!-- BLUE-TEAL BLOB - Left side -->
+    <item
+        android:left="-150dp"
+        android:top="60dp"
+        android:right="180dp"
+        android:bottom="240dp">
+        <shape android:shape="oval">
+            <solid android:color="#50A0C8E8" />
+        </shape>
+    </item>
+
+    <!-- VIBRANT YELLOW-ORANGE BLOB - Bottom-Left (massive, photo-like) -->
+    <item
+        android:left="-120dp"
+        android:top="320dp"
+        android:right="100dp"
+        android:bottom="-180dp">
+        <shape android:shape="oval">
+            <solid android:color="#90ECD878" />
+        </shape>
+    </item>
+
+    <!-- VIBRANT ORANGE-CORAL BLOB - Bottom-Center (massive) -->
+    <item
+        android:left="20dp"
+        android:top="380dp"
+        android:right="20dp"
+        android:bottom="-200dp">
+        <shape android:shape="oval">
+            <solid android:color="#85E0987C" />
+        </shape>
+    </item>
+
+    <!-- VIBRANT PINK-RED BLOB - Bottom-Right (massive, photo-like) -->
+    <item
+        android:left="120dp"
+        android:top="450dp"
+        android:right="-150dp"
+        android:bottom="-220dp">
+        <shape android:shape="oval">
+            <solid android:color="#80FF9095" />
+        </shape>
+    </item>
+
+    <!-- GREEN tint blob - Right side for color variety -->
+    <item
+        android:left="160dp"
+        android:top="200dp"
+        android:right="-120dp"
+        android:bottom="220dp">
+        <shape android:shape="oval">
+            <solid android:color="#45A8D880" />
+        </shape>
+    </item>
+
+    <!-- Top white fade overlay -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="linear"
+                android:angle="270"
+                android:startColor="#25FFFFFF"
+                android:endColor="#00FFFFFF" />
+        </shape>
+    </item>
+
+</layer-list>

@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ⚠️ UNUSED LEGACY LAYOUT — NOT INFLATED ANYWHERE.
+
+  MainActivity is 100% Jetpack Compose (setContent { ... }); there is no
+  setContentView(R.layout.activity_main) call anywhere in the codebase.
+  This XML predates the Compose rewrite and is kept only for reference.
+
+  The original camera ImageView next to the mic icon below has been removed:
+  it had no id and no click listener, and its presence next to a working
+  mic icon could be mistaken for "search launches camera" behavior. The
+  live, functional search bar is SearchBarComponent() in MainActivity.kt,
+  which has only a mic icon wired to ACTION_RECOGNIZE_SPEECH.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/home_screen_background">
+
+    <!-- ══════════════════════════════════════════════════════════
+         HOME SCREEN  (visible on launch, hidden while browsing)
+         ══════════════════════════════════════════════════════════ -->
+    <LinearLayout
+        android:id="@+id/homeScreen"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingStart="22dp"
+        android:paddingEnd="22dp"
+        android:paddingTop="90dp"
+        android:visibility="visible">
+
+        <!-- Logo Row -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="N"
+                android:textStyle="bold"
+                android:textColor="#0C57C7"
+                android:textSize="50sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="12dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Nexus"
+                        android:textColor="#111827"
+                        android:textStyle="bold"
+                        android:textSize="28sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Browser"
+                        android:textColor="#7A8596"
+                        android:textSize="28sp"/>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Fast. Secure. Smart."
+                    android:textColor="#666666"
+                    android:textSize="14sp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Home Search Bar (tappable — focuses urlBar in toolbar) -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/homeSearchBar"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="40dp"
+            app:cardBackgroundColor="@color/glassMedium"
+            app:cardCornerRadius="28dp"
+            app:cardElevation="4dp"
+            android:outlineAmbientShadowColor="@color/shadowLight"
+            android:outlineSpotShadowColor="@color/shadowLight">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@android:drawable/ic_menu_search"
+                    app:tint="@color/textSecondary"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Search or type web address"
+                    android:textColor="@color/hintColor"
+                    android:paddingStart="12dp"
+                    android:textSize="15sp"/>
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="12dp"
+                    android:src="@android:drawable/ic_btn_speak_now"
+                    app:tint="@color/textSecondary"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Quick Links Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Quick Links"
+                android:textColor="@color/textPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Edit"
+                android:textColor="@color/textSecondary"
+                android:textSize="14sp"/>
+        </LinearLayout>
+
+        <!-- Quick Link Cards - Yellow Background -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:spacing="8dp">
+
+            <!-- Google -->
+            <FrameLayout
+                android:id="@+id/shortcutGoogle"
+                android:layout_width="68dp"
+                android:layout_height="84dp"
+                android:layout_marginEnd="4dp"
+                android:background="@drawable/bg_quick_link_yellow">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <ImageView 
+                        android:layout_width="36dp" 
+                        android:layout_height="36dp" 
+                        android:src="@drawable/ic_google_logo"/>
+                    <TextView 
+                        android:layout_width="wrap_content" 
+                        android:layout_height="wrap_content" 
+                        android:layout_marginTop="6dp" 
+                        android:text="Google" 
+                        android:textSize="11sp" 
+                        android:textStyle="bold"
+                        android:textColor="@color/textPrimary"/>
+                </LinearLayout>
+            </FrameLayout>
+
+            <!-- YouTube -->
+            <FrameLayout
+                android:id="@+id/shortcutYoutube"
+                android:layout_width="68dp"
+                android:layout_height="84dp"
+                android:layout_marginEnd="4dp"
+                android:background="@drawable/bg_quick_link_yellow">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <ImageView 
+                        android:layout_width="36dp" 
+                        android:layout_height="36dp" 
+                        android:src="@drawable/ic_youtube_logo"/>
+                    <TextView 
+                        android:layout_width="wrap_content" 
+                        android:layout_height="wrap_content" 
+                        android:layout_marginTop="6dp" 
+                        android:text="YouTube" 
+                        android:textSize="11sp" 
+                        android:textStyle="bold"
+                        android:textColor="@color/textPrimary"/>
+                </LinearLayout>
+            </FrameLayout>
+
+            <!-- Facebook -->
+            <FrameLayout
+                android:id="@+id/shortcutFacebook"
+                android:layout_width="68dp"
+                android:layout_height="84dp"
+                android:layout_marginEnd="4dp"
+                android:background="@drawable/bg_quick_link_yellow">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <ImageView 
+                        android:layout_width="36dp" 
+                        android:layout_height="36dp" 
+                        android:src="@drawable/ic_facebook_logo"/>
+                    <TextView 
+                        android:layout_width="wrap_content" 
+                        android:layout_height="wrap_content" 
+                        android:layout_marginTop="6dp" 
+                        android:text="Facebook" 
+                        android:textSize="11sp" 
+                        android:textStyle="bold"
+                        android:textColor="@color/textPrimary"/>
+                </LinearLayout>
+            </FrameLayout>
+
+            <!-- WhatsApp -->
+            <FrameLayout
+                android:id="@+id/shortcutWhatsapp"
+                android:layout_width="68dp"
+                android:layout_height="84dp"
+                android:layout_marginEnd="4dp"
+                android:background="@drawable/bg_quick_link_yellow">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <ImageView 
+                        android:layout_width="36dp" 
+                        android:layout_height="36dp" 
+                        android:src="@drawable/ic_whatsapp_logo"/>
+                    <TextView 
+                        android:layout_width="wrap_content" 
+                        android:layout_height="wrap_content" 
+                        android:layout_marginTop="6dp" 
+                        android:text="WhatsApp" 
+                        android:textSize="11sp" 
+                        android:textStyle="bold"
+                        android:textColor="@color/textPrimary"/>
+                </LinearLayout>
+            </FrameLayout>
+
+            <!-- More -->
+            <FrameLayout
+                android:id="@+id/shortcutMore"
+                android:layout_width="68dp"
+                android:layout_height="84dp"
+                android:background="@drawable/bg_quick_link_yellow">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <TextView 
+                        android:layout_width="wrap_content" 
+                        android:layout_height="wrap_content"
+                        android:text="⋯" 
+                        android:textSize="32sp"
+                        android:textColor="@color/moreGray"/>
+                    <TextView 
+                        android:layout_width="wrap_content" 
+                        android:layout_height="wrap_content" 
+                        android:layout_marginTop="6dp" 
+                        android:text="More" 
+                        android:textSize="11sp" 
+                        android:textStyle="bold"
+                        android:textColor="@color/textPrimary"/>
+                </LinearLayout>
+            </FrameLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- ══════════════════════════════════════════════════════════
+         BROWSER VIEW  (hidden on home, visible while browsing)
+         ══════════════════════════════════════════════════════════ -->
+
+    <!-- Incognito Banner -->
+    <View
+        android:id="@+id/incognitoBanner"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:background="#7B1FA2"
+        android:visibility="gone"/>
+
+    <!-- Progress Bar -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:max="100"
+        android:visibility="gone"/>
+
+    <!-- WebView inside SwipeRefreshLayout -->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="gone">
+
+        <WebView
+            android:id="@+id/webView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <!-- Browser Toolbar -->
+    <LinearLayout
+        android:id="@+id/browserToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/colorSurface"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:elevation="4dp"
+        android:visibility="gone">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_back"
+            android:contentDescription="Back"/>
+
+        <ImageButton
+            android:id="@+id/btnForward"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_forward"
+            android:contentDescription="Forward"/>
+
+        <EditText
+            android:id="@+id/urlBar"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_weight="1"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:background="@drawable/bg_search_bar"
+            android:hint="Search or type web address"
+            android:imeOptions="actionGo"
+            android:inputType="textUri"
+            android:maxLines="1"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:textSize="14sp"
+            android:singleLine="true"/>
+
+        <ImageButton
+            android:id="@+id/btnRefresh"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_refresh"
+            android:contentDescription="Refresh"/>
+
+        <ImageButton
+            android:id="@+id/btnBookmark"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_bookmark"
+            android:contentDescription="Bookmark"/>
+
+        <ImageButton
+            android:id="@+id/btnDownload"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_download"
+            android:contentDescription="Download"/>
+
+        <ImageButton
+            android:id="@+id/btnDarkMode"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_dark_mode"
+            android:contentDescription="Dark Mode"/>
+
+        <ImageButton
+            android:id="@+id/btnIncognito"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_profile"
+            android:contentDescription="Incognito"/>
+
+        <ImageButton
+            android:id="@+id/btnSettings"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_settings"
+            android:contentDescription="Settings"/>
+
+    </LinearLayout>
+
+    <!-- ══════════════════════════════════════════════════════════
+         BOTTOM NAVIGATION  (always visible)
+         ══════════════════════════════════════════════════════════ -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:layout_margin="16dp"
+        app:cardBackgroundColor="@color/bottomNavBackground"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="8dp"
+        android:outlineAmbientShadowColor="@color/shadowMedium"
+        android:outlineSpotShadowColor="@color/shadowMedium">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/navHome"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="8dp">
+                <ImageView 
+                    android:layout_width="24dp" 
+                    android:layout_height="24dp" 
+                    android:src="@android:drawable/ic_menu_view" 
+                    app:tint="@color/bottomNavActive"/>
+                <TextView 
+                    android:layout_width="wrap_content" 
+                    android:layout_height="wrap_content" 
+                    android:text="Home" 
+                    android:textColor="@color/bottomNavActive" 
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="4dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/navFiles"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="8dp">
+                <ImageView 
+                    android:layout_width="24dp" 
+                    android:layout_height="24dp" 
+                    android:src="@android:drawable/ic_menu_agenda" 
+                    app:tint="@color/bottomNavInactive"/>
+                <TextView 
+                    android:layout_width="wrap_content" 
+                    android:layout_height="wrap_content" 
+                    android:text="Files" 
+                    android:textColor="@color/bottomNavInactive" 
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="4dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/navTabs"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="8dp">
+                <ImageView 
+                    android:layout_width="24dp" 
+                    android:layout_height="24dp" 
+                    android:src="@android:drawable/ic_menu_recent_history" 
+                    app:tint="@color/bottomNavInactive"/>
+                <TextView 
+                    android:layout_width="wrap_content" 
+                    android:layout_height="wrap_content" 
+                    android:text="Tabs" 
+                    android:textColor="@color/bottomNavInactive" 
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="4dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/navProfile"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="8dp">
+                <ImageView 
+                    android:layout_width="24dp" 
+                    android:layout_height="24dp" 
+                    android:src="@android:drawable/ic_menu_myplaces" 
+                    app:tint="@color/bottomNavInactive"/>
+                <TextView 
+                    android:layout_width="wrap_content" 
+                    android:layout_height="wrap_content" 
+                    android:text="Me" 
+                    android:textColor="@color/bottomNavInactive" 
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="4dp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

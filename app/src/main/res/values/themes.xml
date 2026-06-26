@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- Material Components Theme Base -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <style name="Theme.MaterialComponents.DayNight.NoActionBar" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Base Material Components theme for Day/Night -->
+    </style>
+    
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- LIGHT THEME - Premium Glassmorphic -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <style name="Theme.NexusBrowser" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:colorBackground">@color/backgroundColor</item>
+        <item name="colorSurface">@color/colorSurface</item>
+        <item name="android:windowBackground">@color/backgroundColor</item>
+        <!-- Transparent status bar so gradient shows through -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">@color/toolbarBackground</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        
+        <!-- Premium Motion -->
+        <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+        
+        <!-- Elevation -->
+        <item name="android:windowElevation">8dp</item>
+    </style>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- DARK THEME - Premium Glassmorphic Dark Mode -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <style name="Theme.NexusBrowser.Dark" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:colorBackground">@color/darkBackground</item>
+        <item name="colorSurface">@color/darkSurface</item>
+        <item name="android:windowBackground">@color/darkBackground</item>
+        <item name="android:statusBarColor">@color/darkBackground</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:navigationBarColor">@color/darkSurface</item>
+        
+        <!-- Premium Motion -->
+        <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+        
+        <!-- Elevation -->
+        <item name="android:windowElevation">8dp</item>
+    </style>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- BUTTON STYLES -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <style name="PremiumButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+        <item name="cornerRadius">16dp</item>
+    </style>
+    
+    <style name="Widget.MaterialComponents.Button" parent="Widget.AppCompat.Button">
+        <!-- This style provides compatibility for Material Design buttons -->
+    </style>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- CARD STYLES -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <style name="GlassmorphicCard">
+        <item name="cornerRadius">16dp</item>
+        <item name="cardElevation">3dp</item>
+        <item name="cardBackgroundColor">@color/glassMedium</item>
+    </style>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- TEXT STYLES -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <style name="PremiumHeading">
+        <item name="android:textSize">28sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/textPrimary</item>
+    </style>
+
+    <style name="PremiumSubheading">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/textSecondary</item>
+    </style>
+
+    <style name="PremiumBody">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/textPrimary</item>
+    </style>
+
+    <style name="PremiumCaption">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/textTertiary</item>
+    </style>
+</resources>

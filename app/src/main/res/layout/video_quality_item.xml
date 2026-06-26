@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingTop="12dp"
+    android:paddingBottom="12dp"
+    android:background="?attr/selectableItemBackground">
+
+    <RadioButton
+        android:id="@+id/radioQuality"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvQualityLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="#1A2535"
+            android:fontFamily="sans-serif-medium"
+            android:text="720p" />
+
+        <TextView
+            android:id="@+id/tvQualityDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#6B7280"
+            android:fontFamily="sans-serif"
+            android:layout_marginTop="2dp"
+            android:text="HD Quality" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvBandwidth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="13sp"
+        android:textColor="#9CA3AF"
+        android:fontFamily="sans-serif"
+        android:layout_marginStart="12dp"
+        android:text="~2.5 Mbps" />
+
+</LinearLayout>
