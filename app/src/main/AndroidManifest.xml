@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Network -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Storage (legacy APIs) -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <!-- Android 13+ granular media permissions (Feature 2 — MediaStore file browser) -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <!-- ✅ BUG #3 FIX: Access media location metadata -->
+    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
+
+    <!-- Notifications (Android 13+) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
+
+    <!-- Mic (voice search) -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <!--
+        FOREGROUND_SERVICE: required to keep NexusMediaSessionService alive
+        while media is playing in the background (Android 9+).
+
+        FOREGROUND_SERVICE_MEDIA_PLAYBACK: required on Android 14+ for services
+        that declare foregroundServiceType="mediaPlayback".
+
+        FOREGROUND_SERVICE_DATA_SYNC: required on Android 14+ for
+        DownloadService, which declares foregroundServiceType="dataSync"
+        (the standard type for long-running file transfers per Android docs).
+    -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.NexusBrowser"
+        android:usesCleartextTraffic="true"
+        android:enableOnBackInvokedCallback="true">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
+            android:windowSoftInputMode="adjustResize"
+            android:supportsPictureInPicture="true"
+            android:resizeableActivity="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".SearchActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".DownloadsActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!--
+            PlayerActivity — Phase 2C Internal Media Player (ExoPlayer/Media3).
+            Connects to NexusMediaSessionService via MediaController.
+
+            configChanges: handles orientation in-process (no restart on rotation).
+            supportsPictureInPicture: allows PiP when the user presses Home.
+            autoEnterPictureInPicture (API 31+): PiP activates automatically when
+              the user presses Home, without requiring an explicit enterPiP call.
+              On API 26–30 we call enterPictureInPictureMode() from onUserLeaveHint().
+            resizeableActivity: required alongside supportsPictureInPicture.
+            launchMode="singleTask": prevents stacking multiple player instances.
+            windowSoftInputMode: unchanged — keyboard does not overlap video.
+        -->
+        <activity
+            android:name=".PlayerActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
+            android:supportsPictureInPicture="true"
+            android:autoEnterPictureInPicture="true"
+            android:resizeableActivity="true"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
+
+        <!--
+            NexusMediaSessionService — background media playback service.
+
+            foregroundServiceType="mediaPlayback": required on Android 10+ to
+            allow starting a foreground service from the background, and on
+            Android 14+ alongside the FOREGROUND_SERVICE_MEDIA_PLAYBACK permission.
+
+            The ACTION_MEDIA_SESSION intent-filter allows Android Auto, Bluetooth
+            devices, WearOS, and the system media panel to discover this session.
+
+            exported="true" is required for the MediaSession intent-filter to be
+            reachable by the system media infrastructure.
+        -->
+        <service
+            android:name=".NexusMediaSessionService"
+            android:exported="true"
+            android:foregroundServiceType="mediaPlayback">
+            <intent-filter>
+                <action android:name="androidx.media3.session.MediaSessionService" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name=".files.FileManagerActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!--
+            DownloadService — foreground service powering the Background Download
+            Engine (Phase 2A). Performs resumable, byte-range HTTP downloads with
+            real-time progress, pause/resume/cancel, and auto-recovery after
+            network loss. Only ever fetches a single direct file URL per
+            download — no playlist/manifest parsing, no stream sniffing.
+
+            foregroundServiceType="dataSync": the standard type for ongoing
+            file-transfer foreground services on Android 10+, required
+            alongside FOREGROUND_SERVICE_DATA_SYNC on Android 14+.
+        -->
+        <service
+            android:name=".download.DownloadService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+    </application>
+
+</manifest>
