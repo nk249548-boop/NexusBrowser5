@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    item_download.xml — Phase 2B File Manager list row.
+    One row per DownloadEntity from Room DB.
+    Supports: completed (open/share/rename/delete),
+              active (pause/delete),
+              paused (resume/delete),
+              failed/cancelled (retry/delete),
+              queued/waiting (delete).
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="12dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginBottom="2dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="1dp"
+    app:strokeWidth="0dp"
+    app:cardBackgroundColor="?attr/colorSurface">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="10dp">
+
+        <!-- ── Top row: icon + name + status badge ── -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- MIME icon -->
+            <ImageView
+                android:id="@+id/ivFileTypeIcon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:scaleType="centerInside"
+                android:contentDescription="File type" />
+
+            <!-- Name + meta column -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingHorizontal="10dp">
+
+                <TextView
+                    android:id="@+id/tvFileName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:maxLines="2"
+                    android:ellipsize="middle" />
+
+                <TextView
+                    android:id="@+id/tvFileMeta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textSize="11sp"
+                    android:textColor="?attr/colorSecondary"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+                <!-- Hidden; merged into tvFileMeta -->
+                <TextView
+                    android:id="@+id/tvFileDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <!-- Status badge -->
+            <TextView
+                android:id="@+id/tvStatusBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:maxLines="1" />
+
+        </LinearLayout>
+
+        <!-- ── Progress row (RUNNING / PAUSED / QUEUED / WAITING) ── -->
+        <LinearLayout
+            android:id="@+id/layoutProgressRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="8dp"
+            android:visibility="gone">
+
+            <!-- Progress + percentage + speed -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="4dp">
+
+                <ProgressBar
+                    android:id="@+id/pbDownloadProgress"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="6dp"
+                    android:layout_weight="1"
+                    android:max="100"
+                    android:progressTint="?attr/colorPrimary"
+                    android:progressBackgroundTint="@color/progressBackground" />
+
+                <TextView
+                    android:id="@+id/tvProgressText"
+                    android:layout_width="36dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="11sp"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:gravity="end"
+                    android:paddingStart="6dp" />
+
+                <TextView
+                    android:id="@+id/tvSpeedText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="11sp"
+                    android:textColor="?attr/colorSecondary"
+                    android:paddingStart="6dp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- ── Error text (FAILED only) ── -->
+        <TextView
+            android:id="@+id/tvErrorText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="11sp"
+            android:textColor="@color/errorColor"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:visibility="gone" />
+
+        <!-- ── Divider ── -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="2dp"
+            android:background="@color/dividerColor"
+            android:alpha="0.5" />
+
+        <!-- ── Action buttons row ── -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end">
+
+            <!-- Open (completed only) -->
+            <ImageButton
+                android:id="@+id/btnOpen"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_folder"
+                android:scaleType="centerInside"
+                android:padding="6dp"
+                android:contentDescription="Open"
+                android:tint="?attr/colorPrimary"
+                android:visibility="gone" />
+
+            <!-- Share (completed only) -->
+            <ImageButton
+                android:id="@+id/btnShare"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_share"
+                android:scaleType="centerInside"
+                android:padding="6dp"
+                android:contentDescription="Share"
+                android:tint="?attr/colorPrimary"
+                android:visibility="gone" />
+
+            <!-- Rename (completed only) -->
+            <ImageButton
+                android:id="@+id/btnRename"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_rename"
+                android:scaleType="centerInside"
+                android:padding="6dp"
+                android:contentDescription="Rename"
+                android:tint="?attr/colorPrimary"
+                android:visibility="gone" />
+
+            <!-- Retry (failed/cancelled only) -->
+            <ImageButton
+                android:id="@+id/btnRetry"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_refresh"
+                android:scaleType="centerInside"
+                android:padding="6dp"
+                android:contentDescription="Retry"
+                android:tint="?attr/colorPrimary"
+                android:visibility="gone" />
+
+            <!-- Pause / Resume (active or paused) -->
+            <ImageButton
+                android:id="@+id/btnPauseResume"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_pause"
+                android:scaleType="centerInside"
+                android:padding="6dp"
+                android:contentDescription="Pause"
+                android:tint="?attr/colorPrimary"
+                android:visibility="gone" />
+
+            <!-- Delete (always) -->
+            <ImageButton
+                android:id="@+id/btnDelete"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_delete"
+                android:scaleType="centerInside"
+                android:padding="6dp"
+                android:contentDescription="Delete"
+                android:tint="@color/errorColor" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Network -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Storage (legacy APIs up to Android 9) -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
+    <!-- Android 13+ granular media permissions (file browser feature) -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
+
+    <!-- Notifications (Android 13+) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
+
+    <!-- Mic (voice search only) -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <!--
+        FOREGROUND_SERVICE: required to keep NexusMediaSessionService alive
+        while media is playing in the background (Android 9+).
+        FOREGROUND_SERVICE_MEDIA_PLAYBACK: required on Android 14+ for services
+        that declare foregroundServiceType="mediaPlayback".
+        FOREGROUND_SERVICE_DATA_SYNC: required on Android 14+ for DownloadService,
+        which declares foregroundServiceType="dataSync".
+    -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+
+    <application
+        android:name=".NexusBrowserApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.NexusBrowser"
+        android:usesCleartextTraffic="false"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:enableOnBackInvokedCallback="true">
+
+        <!--
+            MainActivity — exported=true required: it is the LAUNCHER entry point
+            and also handles ACTION_VIEW for http/https URLs.
+            The intent-filter for ACTION_VIEW is restricted to http/https schemes only.
+            External http: intents are validated inside handleIncomingIntent().
+        -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
+            android:windowSoftInputMode="adjustResize"
+            android:supportsPictureInPicture="true"
+            android:resizeableActivity="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <!-- Only accept safe web URL schemes -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".SearchActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!--
+            PlayerActivity — Internal Media Player (ExoPlayer/Media3).
+            exported=false: no other app can start the player directly.
+        -->
+        <!--
+            autoEnterPictureInPicture is intentionally omitted from the manifest:
+            - The attribute requires API 31+ to link against, which can break builds
+              on CI environments without SDK 31+ installed.
+            - Equivalent behaviour is provided programmatically via
+              PictureInPictureParams.Builder.setAutoEnterEnabled(true) inside
+              PlayerActivity.buildPipParams(), guarded by Build.VERSION.SDK_INT >= S.
+        -->
+        <activity
+            android:name=".PlayerActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
+            android:supportsPictureInPicture="true"
+            android:resizeableActivity="true"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
+
+        <!--
+            NexusMediaSessionService — background media playback service.
+            exported=true is required for the MediaSession intent-filter to be
+            reachable by the system media infrastructure (Android Auto, Bluetooth,
+            WearOS, system media panel). The ACTION_MEDIA_SESSION intent-filter
+            is the only exposure; no other actions are declared.
+        -->
+        <service
+            android:name=".NexusMediaSessionService"
+            android:exported="true"
+            android:foregroundServiceType="mediaPlayback">
+            <intent-filter>
+                <action android:name="androidx.media3.session.MediaSessionService" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name=".files.FileManagerActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!--
+            DownloadService — foreground service for resumable file downloads.
+            exported=false: only started by this app's own components.
+        -->
+        <service
+            android:name=".download.DownloadService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
+
+        <!--
+            FileProvider — used for sharing downloaded files with other apps.
+            exported=false is correct; uri permissions are granted explicitly.
+        -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <!--
+            Disable WorkManager's auto-initializer so NexusBrowserApplication can
+            supply a custom Configuration via the Configuration.Provider interface.
+            Removing the entire InitializationProvider entry here tells androidx.startup
+            to skip WorkManager's default init, allowing our Application class
+            (which implements Configuration.Provider) to supply the configuration
+            on first use instead. This is the pattern required by the
+            RemoveWorkManagerInitializer lint rule (androidx.work 2.7+).
+        -->
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            tools:node="remove" />
+
+    </application>
+
+</manifest>

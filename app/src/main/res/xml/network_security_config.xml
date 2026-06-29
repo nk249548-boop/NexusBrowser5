@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Network Security Configuration — NexusBrowser Play Store build.
+
+    Policy:
+      - HTTPS only: cleartext (HTTP) traffic is blocked for all domains.
+      - No cleartext exceptions: Play Store and user privacy require HTTPS.
+      - Trust system CA store only: no user-installed certificates trusted for network calls.
+
+    This config works in conjunction with android:usesCleartextTraffic="false"
+    in the manifest. Both settings must be present for full enforcement.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <!-- Trust system CAs only (no user-installed CAs for app traffic) -->
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>
